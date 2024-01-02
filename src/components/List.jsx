@@ -1,6 +1,30 @@
-import React from "react";
+import { useContext, useEffect, useState } from "react";
+import { FirebaseContext } from "../store/context";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 
 function List() {
+  const { firebase } = useContext(FirebaseContext);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function callMe() {
+      const db = getFirestore(firebase);
+      const querySnapshot = await getDocs(collection(db, "products"));
+      // console.log("useEffect snap : ", querySnapshot.docs);
+      // querySnapshot.forEach((doc) => {
+      //   // doc.data() is never undefined for query doc snapshots
+      //   console.log(doc.id, " => ", doc.data());
+      // });
+      const allPost = querySnapshot.docs.map((product) => {
+        return {
+          ...product.data(),
+          id: product.id,
+        };
+      });
+      console.log(allPost);
+    }
+    callMe();
+  }, []);
   return (
     <div className=" max-w-7xl px-20 mx-auto">
       <h2 className=" text-2xl my-7">Fresh recommendations</h2>

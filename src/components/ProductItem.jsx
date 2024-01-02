@@ -1,6 +1,8 @@
-import React from "react";
+
 
 function ProductItem() {
+  
+
   return (
     <>
       <div className="bg-[#f2f2f2]">

@@ -1,4 +1,28 @@
+import { useContext } from "react";
+import SellButton from "../assets/SellButton";
+import { AuthContext } from "../store/context";
+import { signOut } from "firebase/auth";
+import { FirebaseContext } from "../store/context";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+
 function TopNav() {
+  const { user } = useContext(AuthContext);
+  const { firebase } = useContext(FirebaseContext);
+  const navigate = useNavigate();
+  function signout() {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        console.log("signout success");
+        navigate('/login');
+        // code for redirect user to Log-in page
+        // ...
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   return (
     <header className=" bg-[#f2f2f2] z-10 p-2 px-4 sticky top-0">
       <div className=" max-w-7xl mx-auto   flex items-center justify-between">
@@ -35,8 +59,13 @@ function TopNav() {
               </svg>
             </button>
           </div>
-          <button className=" border-b-2 border-black hover:border-0 ">Login</button>
-          <button className="w-[104px] h-[44px] rounded-3xl border-2 border-black mx-4">sell</button>
+          <button onClick={()=>navigate("/login")} className=" border-b-2 border-black hover:border-0 mr-8 ">{user ? user.displayName : "Login"}</button>
+          <button onClick={signout} className="">
+            Logout
+          </button>
+          <button onClick={()=>navigate("/sell")} className="w-[104px] h-[44px] mx-4">
+            <SellButton />
+          </button>
         </div>
       </div>
     </header>
